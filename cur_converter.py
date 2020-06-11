@@ -1,13 +1,14 @@
 from bs4 import BeautifulSoup
 from decimal import Decimal
-import requests,os
+import requests, os
 import tkinter as tk
 from tkinter import ttk
 
-class MainApplication(tk.Frame):
 
+class MainApplication(tk.Frame):
     font = ('arial', 11)
-    precision=4 #how many numbers after the "."
+    precision = 4  # how many numbers after the "."
+
     # add icon and name to window
     def setup_apear(self):
         window.title("Currency convertor")
@@ -23,7 +24,8 @@ class MainApplication(tk.Frame):
 
     # create data in .conf file format
     def create_conf_data(self):
-        return self.window.geometry() + '\n'+str(self.font[0])+","+str(self.font[1])+'\n' + str(self.window.state())
+        return self.window.geometry() + '\n' + str(self.font[0]) + "," + str(self.font[1]) + '\n' + str(
+            self.window.state())
 
     # set up window parameters
     def set_gui_parameters(self):
@@ -32,11 +34,11 @@ class MainApplication(tk.Frame):
                 self.get_info_of_conff_file(conf.read())
 
     # read conff file
-    def get_info_of_conff_file(self,data):
+    def get_info_of_conff_file(self, data):
         global font
         temp = data.split("\n")
         self.window.geometry(temp[0])
-        self.font=(str(temp[1]).split(',')[0], int(str(temp[1]).split(',')[1]))
+        self.font = (str(temp[1]).split(',')[0], int(str(temp[1]).split(',')[1]))
         if temp[2] == 'zoomed':
             self.window.state('zoomed')
 
@@ -67,7 +69,7 @@ class MainApplication(tk.Frame):
             elif ord(i) == ord('.') and not point:
                 point = True
                 number += i
-        number=float(number)
+        number = float(number)
         if Decimal(round(Decimal(number), self.precision)) % Decimal(1.0) == 0:
             number = Decimal(round(Decimal(number), 1))
         else:
@@ -77,7 +79,7 @@ class MainApplication(tk.Frame):
         self.textbox_amount.insert(tk.END, number)
 
     # saves the data about the exchange rate
-    def save_to_file(self,data):
+    def save_to_file(self, data):
         data_to_save = str(data[0][0]) + "," + str(data[0][1])
         data = data[1:]
         for i in range(data.__len__()):
@@ -109,7 +111,7 @@ class MainApplication(tk.Frame):
         return exchanges
 
     # returns the names and the values of the excange in 2 lists
-    def get_exchanges_names_and_value(self,ex):
+    def get_exchanges_names_and_value(self, ex):
         self.Names = []
         self.Value = []
         for i in ex.split("|"):
@@ -117,12 +119,11 @@ class MainApplication(tk.Frame):
             self.Value.append(i.split(',')[1])
         return (self.Names, self.Value)
 
-
     def __init__(self, window, *args, **kwargs):
         tk.Frame.__init__(self, window, *args, **kwargs)
         self.window = window
         self.setup_apear()
-        self.set_gui_parameters() #set up font,window size form conf sife may be disabled
+        self.set_gui_parameters()  # set up font,window size form conf sife may be disabled
         self.setup_wigets()
 
     # set up all the wigets and their settings
@@ -133,24 +134,23 @@ class MainApplication(tk.Frame):
         self.Names = name_and_value[0]
         self.Values = name_and_value[1]
 
-        #self.window.geometry("400x200")
+        # self.window.geometry("400x200")
 
-        self.amount_lable = tk.Label(self.window, text="Amount",font=self.font)
-        self.from_lable = tk.Label(self.window, text="From",font=self.font)
-        self.to_lable = tk.Label(self.window, text="To",font=self.font)
-        self.output_lable = tk.Label(self.window, text="Output",font=self.font)
+        self.amount_lable = tk.Label(self.window, text="Amount", font=self.font)
+        self.from_lable = tk.Label(self.window, text="From", font=self.font)
+        self.to_lable = tk.Label(self.window, text="To", font=self.font)
+        self.output_lable = tk.Label(self.window, text="Output", font=self.font)
 
-        self.textbox_amount = tk.Text(height="1",width="45",font=self.font)
-        self.textbox_output = tk.Text(height="1",width="45",font=self.font)
+        self.textbox_amount = tk.Text(height="1", width="45", font=self.font)
+        self.textbox_output = tk.Text(height="1", width="45", font=self.font)
         self.textbox_output.config(state=tk.DISABLED)
 
-        self.from_box = ttk.Combobox(values=self.Names, takefocus=0,font=self.font)
-        self.to_box = ttk.Combobox(values=self.Names, takefocus=0,font=self.font)
+        self.from_box = ttk.Combobox(values=self.Names, takefocus=0, font=self.font)
+        self.to_box = ttk.Combobox(values=self.Names, takefocus=0, font=self.font)
         self.from_box.current(0)
         self.to_box.current(0)
 
         self.Button_convert = tk.Button(self.window, text="Convert", command=self.convert)
-
 
         self.amount_lable.grid(row=0, column=1, sticky=tk.W)
         self.textbox_amount.grid(row=1, column=1, sticky=tk.EW)
@@ -171,6 +171,7 @@ class MainApplication(tk.Frame):
         self.window.grid_columnconfigure(0, minsize=10)
         self.window.grid_columnconfigure(2, minsize=10)
         self.window.grid_rowconfigure(9, minsize=10)
+
 
 if __name__ == "__main__":
     window = tk.Tk()
